@@ -13,20 +13,23 @@
         <div class="code-editor">
             <h2>Your Python Code:</h2>
             <textarea id="python-code" rows="20" cols="60">
-# Paste your Python code here
-x = 10
-y = 20
-result = x + y
-print(f"Result: {result}")
+# Example Python Code
+a = 33
+b = 200
+if b > a:
+    c = b - a
+else:
+    c = a - b
+print(f"Difference: {c}")
 for i in range(2):
-    print(i)
+    print(f"Loop {i}")
             </textarea>
             
             <div class="controls">
                 <button id="load-pyodide">1. Load Interpreter</button>
                 <button id="run-code" disabled>Run</button>
                 <button id="step-code" disabled>Step</button>
-                <button id="reset-code" disabled>Reset</button>
+                <button id="reset-code">Reset</button>
             </div>
         </div>
 
