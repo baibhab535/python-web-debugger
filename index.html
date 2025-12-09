@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Python Web Debugger</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <h1>Python Web Debugger</h1>
+
+    <div class="container">
+        <div class="code-editor">
+            <h2>Your Python Code:</h2>
+            <textarea id="python-code" rows="20" cols="60">
+# Paste your Python code here
+x = 10
+y = 20
+result = x + y
+print(f"Result: {result}")
+for i in range(2):
+    print(i)
+            </textarea>
+            
+            <div class="controls">
+                <button id="load-pyodide">1. Load Interpreter</button>
+                <button id="run-code" disabled>Run</button>
+                <button id="step-code" disabled>Step</button>
+                <button id="reset-code" disabled>Reset</button>
+            </div>
+        </div>
+
+        <div class="debugger-output">
+            <h2>Output:</h2>
+            <pre id="output">Click 'Load Interpreter' to begin.</pre>
+
+            <h2>Variables:</h2>
+            <pre id="variables">{}</pre>
+
+            <h2>Breakpoints:</h2>
+            <input type="number" id="breakpoint-input" placeholder="Line number">
+            <button id="add-breakpoint">Add Breakpoint</button>
+            <ul id="breakpoint-list"></ul>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/pyodide/v0.25.0/full/pyodide.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
