@@ -39,6 +39,7 @@ function python_tracer(frame, event, arg) {
 
         try {
             // 1. Extract Local Variables using the helper function defined in Python
+            // This relies on __get_locals being defined in the Python scope (see below)
             const localsMap = pyodide.globals.get('__get_locals')(frame);
             
             // Convert the Map to a simple JS Object for JSON serialization
@@ -50,7 +51,7 @@ function python_tracer(frame, event, arg) {
             postMessageToMain('line_executed', { line: line, variables: varsPayload });
 
             // 3. Yield Control (PAUSE Execution)
-            // This advances the Python generator, pausing execution
+            // This advances the Python generator, which pauses the Python execution
             pyodide.globals.get('__python_debugger_step_control').next();
 
         } catch (e) {
@@ -74,10 +75,11 @@ self.onmessage = async (e) => {
             pyodide.runPython(`
                 import sys
                 from pyodide.ffi import to_js
-                from js import Object # FIXED: Import Object for dictionary conversion
+                from js import Object  # <<<--- CRITICAL FIX: Ensures 'Object' is accessible for conversion
 
                 # Helper function to safely get locals from a frame
                 def __get_locals(frame):
+                    # Uses Object.fromEntries for robust conversion to a JS object
                     return to_js(frame.f_locals, dict_converter=Object.fromEntries)
 
                 # A Python generator that we use to pause execution and yield control to JS
