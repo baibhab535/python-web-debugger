@@ -39,7 +39,6 @@ function python_tracer(frame, event, arg) {
 
         try {
             // 1. Extract Local Variables using the helper function defined in Python
-            // This relies on __get_locals being defined in the Python scope (see below)
             const localsMap = pyodide.globals.get('__get_locals')(frame);
             
             // Convert the Map to a simple JS Object for JSON serialization
@@ -75,7 +74,7 @@ self.onmessage = async (e) => {
             pyodide.runPython(`
                 import sys
                 from pyodide.ffi import to_js
-                from js import Object  # <<<--- CRITICAL FIX: Ensures 'Object' is accessible for conversion
+                from js import Object  # <<<--- CRITICAL FIX: Resolves NameError
 
                 # Helper function to safely get locals from a frame
                 def __get_locals(frame):
