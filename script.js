@@ -78,21 +78,21 @@ function initPyodideWorker() {
             currentLine = payload.line;
             updateVariables(payload.variables);
             
-            // Re-enable control buttons
+            // 1. Re-enable control buttons
             runCodeBtn.disabled = false;
             stepCodeBtn.disabled = false;
 
-            // Decide whether to pause (Step mode) or continue (Run mode)
+            // 2. Decide whether to pause (Step mode) or continue (Run mode)
             const isBreakpointHit = breakpoints.has(currentLine);
 
             if (isStepping || isBreakpointHit) {
-                // Pause for user input
+                // If in 'Step' mode or we hit a breakpoint, we pause here.
                 isRunning = false; 
                 isStepping = false;
                 appendOutput(`Execution paused at line ${currentLine}.`);
 
             } else if (isRunning) {
-                // Auto-continue execution if in run mode and not at a breakpoint
+                // If in 'Run' mode and not at a breakpoint, auto-continue.
                 stepCodeBtn.disabled = true; 
                 runCodeBtn.disabled = true;
                 pyodideWorker.postMessage({ command: 'continue_execution' });
@@ -109,7 +109,7 @@ function initPyodideWorker() {
             appendOutput(`RUNTIME ERROR: ${payload}`);
             isRunning = false;
             isStepping = false;
-            runCodeBtn.disabled = false;
+            runCodeBtn.disabled = false; // Allow user to try running again
             stepCodeBtn.disabled = true;
         }
     };
@@ -131,10 +131,11 @@ loadPyodideBtn.addEventListener('click', async () => {
     appendOutput("Loading Pyodide...");
     initPyodideWorker(); 
     loadPyodideBtn.disabled = true;
+    // Allow run/step buttons to be enabled after a short delay, assuming worker load is successful
     setTimeout(() => {
         runCodeBtn.disabled = false;
         stepCodeBtn.disabled = false;
-    }, 2000); // Give worker time to load
+    }, 2000); 
 });
 
 addBreakpointBtn.addEventListener('click', () => {
